@@ -13,7 +13,8 @@ const {
   changePassword,
   updateUser,
   addUserSkillsById,
-  getSkillsByID
+  getSkillsByID,
+  skillResponse,
 } = require('../controller/userControl');
 
 router.get('/home', home);
@@ -26,6 +27,9 @@ router.post('/reset', forgotPassword);
 router.post('/reset-password/:resetToken', resetPassword); //these are endpoints
 router.post('/change-password', isLoggedIn, changePassword);
 router.post("/add-skills/:id",addUserSkillsById)
+//dummy
+router.post("/ai",skillResponse)
+router.put('/update/:id', isLoggedIn, upload.single('avatar'), updateUser);
 router.put('/update/:id', isLoggedIn, upload.single('avatar'), updateUser);
 module.exports = router;
 

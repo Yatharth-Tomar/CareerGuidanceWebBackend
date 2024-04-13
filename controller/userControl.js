@@ -332,3 +332,36 @@ exports.getSkillsByID=async (req,res,next)=>{
       return next(new AppError("cannot add the skills :(",400))
   }
 }
+
+
+///dummy request
+
+exports.skillResponse=async(req,res,next)=>{
+  try{
+    console.log("i am called in server ")
+    const {skills}=req.body;
+    
+    
+    console.log("ai is here ",skills)
+    const jobs ={
+      job1:[
+        "AI",
+        "Devops",
+        "Gardener"
+      ]
+    }
+   
+    res.status(200).json({
+      success:true,
+      message:"You can try in following jobs",
+      jobs
+    })
+    return;
+    
+
+
+  }catch(e){
+    console.log("Error in ai",e);
+    return next(new AppError("cannot add the ai ai :(",400))
+  }
+}

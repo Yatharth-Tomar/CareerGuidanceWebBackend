@@ -13,6 +13,7 @@ const razorpay = new Razorpay({
 
 exports.getRazorPayKey = async (req, res, next) => {
   try {
+   
     res.status(200).json({
       success: true,
       message:"Razor pay api key. ",
@@ -37,7 +38,7 @@ exports.buySubscription = async (req, res, next) => {
     const subscription = await razorpay.subscriptions.create({
       plan_id: process.env.RAZORPAY_PLAN_ID,
       customer_notify: 1,
-      total_count: 1
+      total_count: 12
     });
     console.log("subscription is ",subscription)
     user.subscription.id = subscription.id;
@@ -69,7 +70,9 @@ exports.verifySubscription = async (req, res, next) => {
       razorpay_signature,
       razorpay_subscription_id,
     } = req.body;
-
+    console.log("hello paaji ",razorpay_payment_id,"  ",
+      razorpay_signature,"  ",
+      razorpay_subscription_id,)
     const user = await User.findById(id);
     if (!user) {
       return next(new AppError('Unauthorized, please login', 400));
@@ -77,9 +80,10 @@ exports.verifySubscription = async (req, res, next) => {
     const subscriptionId = user.subscription.id;
 
     const generatedSignature = crypto
-      .createHmac('sha56', process.env.RAZORPAY_SECRET)
+      .createHmac('sha256', process.env.RAZORPAY_SECRET)
       .update(`${razorpay_payment_id}|${subscriptionId}`)
       .digest('hex');
+      console.log("generated signature ",generatedSignature)
 
     if (generatedSignature !== razorpay_signature) {
       return next(new AppError('Payment not verified,please try again', 500));
@@ -89,7 +93,7 @@ exports.verifySubscription = async (req, res, next) => {
       razorpay_subscription_id,
       razorpay_signature,
     });
-
+    
     user.subscription.status = 'active';
     await user.save();
     res.status(200).json({
@@ -118,9 +122,10 @@ exports.cancelSubscripiton = async (req, res, next) => {
     const subscription = await razorpay.subscriptions.cancel(
       subscriptionId
     );
+    console.log("Subscription status is ",subscription.status)
     user.subscription.status = subscription.status;
    
-    await user.save;
+    await user.save();
     res.status(200).json({
       success: true,
       message: 'subscription canceled',
