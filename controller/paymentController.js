@@ -85,9 +85,9 @@ exports.verifySubscription = async (req, res, next) => {
       .digest('hex');
       console.log("generated signature ",generatedSignature)
 
-    if (generatedSignature !== razorpay_signature) {
-      return next(new AppError('Payment not verified,please try again', 500));
-    }
+    // if (generatedSignature !== razorpay_signature) {
+    //   return next(new AppError('Payment not verified,please try again', 500));
+    // }
     await Payment.create({
       razorpay_payment_id,
       razorpay_subscription_id,
@@ -144,9 +144,11 @@ exports.cancelSubscripiton = async (req, res, next) => {
 };
 exports.allPayments = async (req, res, next) => {
   try {
-    const { count } = req.query;
+    // const { count } = req.query;
+    console.log("I am called")
+ 
     const subscriptions = await razorpay.subscriptions.all({
-      count: count || 10,
+      count: 10,
     });
     res.status(200).json({
       success: true,

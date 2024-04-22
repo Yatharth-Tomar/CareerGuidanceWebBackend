@@ -1,5 +1,7 @@
 const AppError = require('../utility/appError');
 const User = require('../model/user.schema');
+//for admin stats
+const Course=require("../model/course.model")
 const bcrypt = require('bcrypt');
 const cloudinary = require('cloudinary');
 const fs = require('fs');
@@ -363,5 +365,44 @@ exports.skillResponse=async(req,res,next)=>{
   }catch(e){
     console.log("Error in ai",e);
     return next(new AppError("cannot add the ai ai :(",400))
+  }
+}
+
+
+//number of registered users
+//number of enrolled user(having subscription active)
+
+
+exports.adminStates=async (req,res,next)=>{
+  try{
+
+    const registeredUsers=await User.find({});
+    //returns array 
+    const countR=registeredUsers.length
+   
+
+
+    //no no of enrolled users
+    const enrolledUsers=await User.find({"subscription.status":"active"})
+    const countE=enrolledUsers.length
+
+    const final={
+      countR,
+      countE
+    }
+    res.status(200).json({
+      success:true,
+      message:"Admin stats retrieved",
+       final
+    })
+
+
+  }
+  catch(e){
+    res.status(400).json({
+      success:false,
+      message:"Error Occured"+e.message
+
+    })
   }
 }

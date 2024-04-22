@@ -15,6 +15,7 @@ const {
   addUserSkillsById,
   getSkillsByID,
   skillResponse,
+  adminStates,
 } = require('../controller/userControl');
 
 router.get('/home', home);
@@ -31,6 +32,9 @@ router.post("/add-skills/:id",addUserSkillsById)
 router.post("/ai",skillResponse)
 router.put('/update/:id', isLoggedIn, upload.single('avatar'), updateUser);
 router.put('/update/:id', isLoggedIn, upload.single('avatar'), updateUser);
+
+//admin stats
+router.get("/admin-stats",adminStates)
 module.exports = router;
 
 

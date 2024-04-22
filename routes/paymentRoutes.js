@@ -14,6 +14,6 @@ router.get('/razorpay-key', isLoggedIn, getRazorPayKey);
 router.post('/subscribe', isLoggedIn, buySubscription);
 router.post('/verify', isLoggedIn, verifySubscription);
 router.post('/unsubscribe', isLoggedIn, cancelSubscripiton);
-router.get('/', isLoggedIn, authorizedRoles, allPayments);
+router.get('/', isLoggedIn, authorizedRoles("ADMIN"), allPayments);
 
 module.exports = router;
